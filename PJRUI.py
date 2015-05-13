@@ -58,7 +58,7 @@ class MyWindowClass(QMainWindow, form_class):
         self.graphicsView.setScene(self.scene)
   
         self.BtnPuu.clicked.connect(self.buttonClicked)            
-        self.BtnPoista.clicked.connect(self.buttonClicked)        
+        self.BtnPoista.clicked.connect(self.poistaPainettu)        
         self.BtnYhdista.clicked.connect(self.buttonClicked)
         
         
@@ -84,7 +84,10 @@ class MyWindowClass(QMainWindow, form_class):
         #print(self.jatkoPiste.x(), self.jatkoPiste.y())
         self.jatkoKulma = self.jatkoKulma - self.palaKulma
         self.scene.addGenericItem(Ratapala(self.palaPituus, self.jatkoKulma, self))
-      
+    
+    def poistaPainettu(self):
+        self.scene.removeItem(self.valittu)
+    
     def center(self):
         
         qr = self.frameGeometry()

@@ -10,35 +10,36 @@ class Ratapala(QGraphicsPathItem):
     def __init__(self, palaPituus, kulma, kayttoliittyma, edellinen=None):
 
         self.UI = kayttoliittyma        
-        alku = self.UI.jatkoPiste 
+        sijainti = self.UI.jatkoPiste 
         
         
         lx = palaPituus * 5 * math.cos(kulma)
         ly = palaPituus * 5 * math.sin(kulma)
 
-        loppu = QPointF(lx,ly)
+        suunta = QPointF(lx,ly)
 
-        self.UI.jatkoPiste  = self.UI.jatkoPiste + loppu
+        self.UI.jatkoPiste  = self.UI.jatkoPiste + suunta
 
         self.path = QPainterPath()
-        self.path.lineTo(loppu) 
+        self.path.lineTo(suunta) 
         QGraphicsPathItem.__init__(self, self.path)
-        self.setPos(alku)
+        self.setPos(sijainti)
 
         self.setFlag( QGraphicsItem.ItemIsMovable, True)
         self.setFlag( QGraphicsItem.ItemIsSelectable, True)
         self.setAcceptDrops(True)
 
-        self.alku = alku
-        self.loppu = loppu
+        self.sijainti = sijainti
+        self.suunta = suunta
         self.kulma = kulma  
 
         self.lahdot = []
         self.seuraava = None
 
     def mouseReleaseEvent(self, event):
-        self.UI.jatkoPiste = self.loppu + self.alku
+        self.UI.jatkoPiste = self.suunta + self.sijainti
         self.UI.jatkoKulma = self.kulma
+        self.UI.valittu = self
         
     def dragEnterEvent(self, e):
       
@@ -54,7 +55,7 @@ class Ratapala(QGraphicsPathItem):
 
         drag = QDrag(e.widget())
         drag.setMimeData(mimeData)
-        paikka = e.pos() - self.alku
+        paikka = e.pos() - self.sijainti
         #drag.setHotSpot(paikka.toPoint())
 
         self.UI.valittu = self
@@ -65,9 +66,9 @@ class Ratapala(QGraphicsPathItem):
     def dropEvent(self, e):
 
         #position = e.pos()
-        self.UI.valittu.setPos(self.loppu + self.alku)
+        self.UI.valittu.setPos(self.suunta + self.sijainti)
         
-        self.UI.jatkoPiste = self.loppu
+        self.UI.jatkoPiste = self.suunta
         self.UI.jatkoKulma = self.kulma
 
         e.setDropAction(Qt.MoveAction)
@@ -106,6 +107,6 @@ class Ratapala(QGraphicsPathItem):
         self.lahdot.remove(lahto)
         
     def __eq__(self, other):
-        return self.alku == other.alku and  self.loppu == other.loppu
+        return self.sijainti == other.sijainti and  self.suunta == other.suunta
     
 
