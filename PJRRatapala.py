@@ -11,9 +11,8 @@ class Ratapala(QGraphicsPathItem):
 
         self.UI = kayttoliittyma        
         alku = self.UI.jatkoPiste 
-  
-        self.path = QPainterPath()
-
+        
+        
         lx = palaPituus * 5 * math.cos(kulma)
         ly = palaPituus * 5 * math.sin(kulma)
 
@@ -21,34 +20,21 @@ class Ratapala(QGraphicsPathItem):
 
         self.UI.jatkoPiste  = self.UI.jatkoPiste + loppu
 
+        self.path = QPainterPath()
         self.path.lineTo(loppu) 
-
-        #self.path.quadTo(kpiste,loppu)
-
         QGraphicsPathItem.__init__(self, self.path)
+        self.setPos(alku)
 
         self.setFlag( QGraphicsItem.ItemIsMovable, True)
         self.setFlag( QGraphicsItem.ItemIsSelectable, True)
         self.setAcceptDrops(True)
-        self.setPos(alku)
-        
+
         self.alku = alku
         self.loppu = loppu
-        self.kulma = kulma
-
-    # The dragEnterEvent() handler is called when a Drag and Drop element  dragged into the element's area.
-    #def dragEnterEvent(self, e): pass
-  
-    # The dragLeaveEvent() handler is called when a Drag and Drop element is dragged away element's area.    
-    #def dragLeaveEvent(self, e): pass
-    
-    #The dropEvent() handler is called when a Drag and Drop element is dropped onto an item (i.e., when the mouse button is released over the item while dragging).    
+        self.kulma = kulma  
 
         self.lahdot = []
         self.seuraava = None
-        
-        
-            # TODO
 
     def mouseReleaseEvent(self, event):
         self.UI.jatkoPiste = self.loppu + self.alku

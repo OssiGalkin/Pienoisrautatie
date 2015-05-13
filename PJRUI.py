@@ -27,24 +27,24 @@ class MyWindowClass(QMainWindow, form_class):
         self.SliderKulma.valueChanged.connect(self.setPalaKulma)
         self.SliderKulma.valueChanged.connect(self.lcdNumber_2.display)
         
-        exitAction = QAction(QIcon('exit24.png'), 'Exit', self)
+        exitAction = QAction(QIcon('exit24.png'), 'Lopeta', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('Exit application')
         exitAction.triggered.connect(self.close)
 
-        openFile = QAction(QIcon('open.png'), 'Open', self)
+        openFile = QAction(QIcon('open.png'), 'Avaa', self)
         openFile.setShortcut('Ctrl+O')
-        openFile.setStatusTip('Open new File')
+        openFile.setStatusTip('Avaa tallennettu rata')
         openFile.triggered.connect(self.showOpenDialog)
         
-        newFile = QAction(QIcon('new.png'), 'New', self)
+        newFile = QAction(QIcon('new.png'), 'Uusi', self)
         newFile.setShortcut('Ctrl+N')
-        newFile.setStatusTip('New File')
+        newFile.setStatusTip('Luo uusi tyhjä rata')
         newFile.triggered.connect(self.showNewDialog)
         
         saveFile = QAction(QIcon('save.png'), 'Save', self)
         saveFile.setShortcut('Ctrl+S')
-        saveFile.setStatusTip('Save File')
+        saveFile.setStatusTip('Tallenna rata')
         saveFile.triggered.connect(self.showSaveDialog)
 
         menubar = self.menuBar()
@@ -95,7 +95,7 @@ class MyWindowClass(QMainWindow, form_class):
     def buttonClicked(self):
       
         sender = self.sender()
-        self.statusBar().showMessage(sender.text() + ' was pressed')
+        self.statusBar().showMessage('Nappia: ' + sender.text() + ' painettiin')
         
     def keyPressEvent(self, e):
         
@@ -104,8 +104,8 @@ class MyWindowClass(QMainWindow, form_class):
 
     def closeEvent(self, event):
         
-        reply = QMessageBox.question(self, 'Message',
-            "Are you sure to quit?", QMessageBox.Yes | 
+        reply = QMessageBox.question(self, 'Viesti',
+            "Haluatko varmasti lopettaa?", QMessageBox.Yes | 
             QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
@@ -115,7 +115,7 @@ class MyWindowClass(QMainWindow, form_class):
             
     def showOpenDialog(self):
 
-        fname, _ = QFileDialog.getOpenFileName(self, 'Open file', '/home')
+        fname, _ = QFileDialog.getOpenFileName(self, 'Avaa', '/home')
         # TODO Tiedostotyyppi
         
         if fname:
@@ -124,13 +124,6 @@ class MyWindowClass(QMainWindow, form_class):
                 data = f.read()
                 self.statusBar().showMessage(data)
             
-    def showInputDialog(self):
-        
-        text, ok = QInputDialog.getText(self, 'Input Dialog', 
-            'Enter your name:')
-        if ok:
-            self.statusBar().showMessage(str(data))
-
     def showSaveDialog(self):
 
         fileName = QFileDialog.getSaveFileName(self, 'Dialog Title', '/path/to/default/directory')
@@ -140,12 +133,14 @@ class MyWindowClass(QMainWindow, form_class):
         
     def showNewDialog(self, event):
         
-        reply = QMessageBox.question(self, 'Message',
+        reply = QMessageBox.question(self, 'Viesti',
             "Uusi rata? Menetät vanhan radan tallentamattomat tiedot.", QMessageBox.Yes | 
             QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
-            self.statusBar().showMessage('Nyt tulisi tyhjä kartta')
+            self.scene =  Kartta()
+            self.graphicsView.setScene(self.scene)
+            #self.statusBar().showMessage('Nyt tulisi tyhjä kartta')
             # TODO
             
     def setPalaPituus(self, arvo):
