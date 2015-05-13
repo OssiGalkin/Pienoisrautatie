@@ -1,29 +1,41 @@
-
 from PyQt5.QtWidgets import QGraphicsPathItem, QGraphicsItem
-from PyQt5.QtGui import QPainterPath
+from PyQt5.QtGui import QPainterPath, QDrag
 
-# Ratapala on kahden liitoksen välissä oleva näkyvä radan osa
+import math
+from PyQt5.QtCore import QPointF
+
+from PyQt5.QtCore import Qt, QMimeData
+
 class Ratapala(QGraphicsPathItem):
-    def __init__(self, alku, kpiste, loppu, edellinen=None):
-    
+    def __init__(self, palaPituus, kulma, kayttoliittyma, edellinen=None):
+
+        self.UI = kayttoliittyma        
+        alku = self.UI.jatkoPiste 
+  
         self.path = QPainterPath()
-        
-        self.path.quadTo(kpiste,loppu)
-        
-        #self.path.lineTo(loppu)
+
+        lx = palaPituus * 5 * math.cos(kulma)
+        ly = palaPituus * 5 * math.sin(kulma)
+
+        loppu = QPointF(lx,ly)
+
+        self.UI.jatkoPiste  = self.UI.jatkoPiste + loppu
+
+        self.path.lineTo(loppu) 
+
+        #self.path.quadTo(kpiste,loppu)
 
         QGraphicsPathItem.__init__(self, self.path)
 
         self.setFlag( QGraphicsItem.ItemIsMovable, True)
         self.setFlag( QGraphicsItem.ItemIsSelectable, True)
+        self.setAcceptDrops(True)
         self.setPos(alku)
         
         self.alku = alku
-        self.kpiste = kpiste
         self.loppu = loppu
-        
-        # TODO parent systeemi
-        # alku -> ratapala ->loppu
+        self.kulma = kulma
+
     # The dragEnterEvent() handler is called when a Drag and Drop element  dragged into the element's area.
     #def dragEnterEvent(self, e): pass
   
@@ -35,6 +47,46 @@ class Ratapala(QGraphicsPathItem):
         self.lahdot = []
         self.seuraava = None
         
+        
+            # TODO
+
+    def mouseReleaseEvent(self, event):
+        self.UI.jatkoPiste = self.loppu + self.alku
+        self.UI.jatkoKulma = self.kulma
+        
+    def dragEnterEvent(self, e):
+      
+        e.accept()
+        
+
+    def mouseMoveEvent(self, e):
+
+        #if e.buttons() != Qt.RightButton:
+        #    return
+
+        mimeData = QMimeData()
+
+        drag = QDrag(e.widget())
+        drag.setMimeData(mimeData)
+        paikka = e.pos() - self.alku
+        #drag.setHotSpot(paikka.toPoint())
+
+        self.UI.valittu = self
+        
+        dropAction = drag.exec_(Qt.MoveAction)
+        
+    
+    def dropEvent(self, e):
+
+        #position = e.pos()
+        self.UI.valittu.setPos(self.loppu + self.alku)
+        
+        self.UI.jatkoPiste = self.loppu
+        self.UI.jatkoKulma = self.kulma
+
+        e.setDropAction(Qt.MoveAction)
+        e.accept()
+
     def seuraava(self):
         return self.seuraava
         
@@ -71,9 +123,3 @@ class Ratapala(QGraphicsPathItem):
         return self.alku == other.alku and  self.loppu == other.loppu
     
 
-    def dropEvent(self, e):
-    
-        # QtWidgets.selectedItems()[0]
-    
-        pass
-        

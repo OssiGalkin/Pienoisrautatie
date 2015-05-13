@@ -14,11 +14,13 @@ class MyWindowClass(QMainWindow, form_class):
         QMainWindow.__init__(self, parent)
         self.setupUi(self)
         
-        self.palaPituus = 0.0
+        self.palaPituus = 0
         self.palaKulma = 0.0
         
         self.jatkoPiste = QPointF(0,0)
         self.jatkoKulma = 0.0
+        
+        self.valittu = None
 
         self.SliderPituus.valueChanged.connect(self.setPalaPituus)
         self.SliderPituus.valueChanged.connect(self.lcdNumber.display)
@@ -56,55 +58,33 @@ class MyWindowClass(QMainWindow, form_class):
         self.graphicsView.setScene(self.scene)
   
         self.BtnPuu.clicked.connect(self.buttonClicked)            
+        self.BtnPoista.clicked.connect(self.buttonClicked)        
+        self.BtnYhdista.clicked.connect(self.buttonClicked)
         
-        self.BtnVaihde.clicked.connect(self.buttonClicked)            
-        #self.BtnMutka.clicked.connect(self.buttonClicked)        
-        self.BtnStopperi.clicked.connect(self.buttonClicked) 
         
         self.BtnSuora.clicked.connect(self.suoraPainettu)
-        self.BtnMutka.clicked.connect(self.mutkaPainettu)
+        self.BtnMutkaVasen.clicked.connect(self.mutkaVasenPainettu)
+        self.BtnMutkaOikea.clicked.connect(self.mutkaOikeaPainettu)
         
         self.statusBar()
         self.center()
 
         
     def suoraPainettu(self):
-        alku = self.jatkoPiste 
 
-        self.jatkoKulma = self.jatkoKulma + self.palaKulma
-
-        lx = self.palaPituus * math.cos(self.jatkoKulma)
-        ly = self.palaPituus * math.sin(self.jatkoKulma)
-
-        kpiste = loppu = QPointF(lx,ly)
+        self.scene.addGenericItem(Ratapala(self.palaPituus, self.jatkoKulma, self))
         
-        self.jatkoPiste = self.jatkoPiste + loppu
-
-        #print(self.jatkoPiste.x(), self.jatkoPiste.y())
-        self.scene.addItem(Ratapala(alku, kpiste, loppu))        
-
-    def mutkaPainettu(self):
+    def mutkaOikeaPainettu(self):
     
-        # TODO
-        alku = self.jatkoPiste 
-        
         self.jatkoKulma = self.jatkoKulma + self.palaKulma
-        
-        kx = 0.5*self.palaPituus * math.cos(1.2*self.jatkoKulma)
-        ky = 0.5*self.palaPituus * math.sin(1.2*self.jatkoKulma)
-
-        kpiste =QPointF(kx,ky)
-        lx = self.palaPituus * math.cos(self.jatkoKulma)
-        ly = self.palaPituus * math.sin(self.jatkoKulma)
-
-        loppu = QPointF(lx,ly)
-        
-        self.jatkoPiste = self.jatkoPiste + loppu
-        
-        
+        self.scene.addGenericItem(Ratapala(self.palaPituus, self.jatkoKulma, self))
+    
+    def mutkaVasenPainettu(self):
+    
         #print(self.jatkoPiste.x(), self.jatkoPiste.y())
-        self.scene.addGenericItem(Ratapala(alku, kpiste, loppu))
-   
+        self.jatkoKulma = self.jatkoKulma - self.palaKulma
+        self.scene.addGenericItem(Ratapala(self.palaPituus, self.jatkoKulma, self))
+      
     def center(self):
         
         qr = self.frameGeometry()
@@ -116,7 +96,6 @@ class MyWindowClass(QMainWindow, form_class):
       
         sender = self.sender()
         self.statusBar().showMessage(sender.text() + ' was pressed')
-        print (self.palaKulma, self.palaPituus)
         
     def keyPressEvent(self, e):
         
@@ -141,7 +120,6 @@ class MyWindowClass(QMainWindow, form_class):
         
         if fname:
             f = open(fname, 'r')
-        
             with f:        
                 data = f.read()
                 self.statusBar().showMessage(data)
@@ -150,7 +128,6 @@ class MyWindowClass(QMainWindow, form_class):
         
         text, ok = QInputDialog.getText(self, 'Input Dialog', 
             'Enter your name:')
-        
         if ok:
             self.statusBar().showMessage(str(data))
 
@@ -158,7 +135,6 @@ class MyWindowClass(QMainWindow, form_class):
 
         fileName = QFileDialog.getSaveFileName(self, 'Dialog Title', '/path/to/default/directory')
         # TODO Tiedostotyyppi
-        
         # TODO
         self.statusBar().showMessage(str(fileName))
         
@@ -171,8 +147,9 @@ class MyWindowClass(QMainWindow, form_class):
         if reply == QMessageBox.Yes:
             self.statusBar().showMessage('Nyt tulisi tyhjä kartta')
             # TODO
+            
     def setPalaPituus(self, arvo):
-        self.palaPituus = float(arvo)
+        self.palaPituus = arvo
         
     def setPalaKulma(self, arvo):
-        self.palaKulma = float(arvo/100)
+        self.palaKulma = math.radians(arvo)

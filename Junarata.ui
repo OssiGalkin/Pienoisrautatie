@@ -26,7 +26,14 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QGraphicsView" name="graphicsView"/>
+           <widget class="QGraphicsView" name="graphicsView">
+            <property name="whatsThis">
+             <string/>
+            </property>
+            <property name="accessibleDescription">
+             <string/>
+            </property>
+           </widget>
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -39,11 +46,17 @@
             </item>
             <item>
              <widget class="QSlider" name="SliderPituus">
+              <property name="cursor">
+               <cursorShape>ArrowCursor</cursorShape>
+              </property>
               <property name="minimum">
                <number>1</number>
               </property>
               <property name="maximum">
-               <number>300</number>
+               <number>30</number>
+              </property>
+              <property name="sliderPosition">
+               <number>1</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -62,11 +75,14 @@
             </item>
             <item>
              <widget class="QSlider" name="SliderKulma">
+              <property name="cursor">
+               <cursorShape>ArrowCursor</cursorShape>
+              </property>
               <property name="minimum">
-               <number>-628</number>
+               <number>0</number>
               </property>
               <property name="maximum">
-               <number>628</number>
+               <number>180</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -94,16 +110,22 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
-           <widget class="QPushButton" name="BtnPuu">
+           <widget class="QPushButton" name="BtnMutkaVasen">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
             <property name="text">
-             <string>Puu</string>
+             <string>Mutka (vasen)</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="BtnMutka">
+           <widget class="QPushButton" name="BtnSuora">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
             <property name="text">
-             <string>Mutka</string>
+             <string>Suora</string>
             </property>
            </widget>
           </item>
@@ -112,16 +134,22 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
-           <widget class="QPushButton" name="BtnSuora">
+           <widget class="QPushButton" name="BtnMutkaOikea">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
             <property name="text">
-             <string>Suora</string>
+             <string>Mutka (oikea)</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="BtnVaihde">
+           <widget class="QPushButton" name="BtnPuu">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
             <property name="text">
-             <string>Vaihde</string>
+             <string>Puu</string>
             </property>
            </widget>
           </item>
@@ -130,16 +158,31 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QPushButton" name="BtnStopperi">
+           <widget class="QPushButton" name="BtnYhdista">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="statusTip">
+             <string/>
+            </property>
+            <property name="whatsThis">
+             <string comment="&quot;erfwf&quot;" extracomment="&quot;444&quot;"/>
+            </property>
             <property name="text">
-             <string>Stopperi</string>
+             <string>Yhdistä</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="btnNelio">
+           <widget class="QPushButton" name="BtnPoista">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
             <property name="text">
-             <string>Nelio</string>
+             <string>Poista</string>
             </property>
            </widget>
           </item>
