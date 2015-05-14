@@ -6,22 +6,36 @@ from PyQt5.QtCore import QPointF
 from PyQt5.QtCore import Qt, QMimeData
 
 class Ratapala(QGraphicsPathItem):
-    def __init__(self, palaPituus, kulma, scene, sijaintiX=None, sijaintiY=None):
+    def __init__(self, palaPituus, kulma, scene, sijainti = None, suunta = None):
   
         self.scene = scene
         self.kulma = kulma
         self.pituus = palaPituus
         
-        if sijaintiX == None or sijaintiY == None:
+        if sijainti == None:
             self.sijainti = self.scene.jatkoPiste 
+
+            if suunta != None:
+                self.suunta = suunta
+                
+                self.kulma = math.atan2(sijainti.y()-suunta.y(), sijainti.x()-suunta.x())
+                self.pituus = math.sqrt((sijainti.x()-suunta.x())**2 + (sijainti.y()-suunta.y())**2) 
+
+            else:    
+            
+                lx = self.pituus * math.cos(self.kulma)
+                ly = self.pituus * math.sin(self.kulma)
+                self.suunta = QPointF(lx,ly)
+                    
         else:
-            self.sijainti = QPointF(sijaintiX,sijaintiY)
         
-        lx = self.pituus * math.cos(self.kulma)
-        ly = self.pituus * math.sin(self.kulma)
-
-        self.suunta = QPointF(lx,ly)
-
+            lx = self.pituus * math.cos(self.kulma)
+            ly = self.pituus * math.sin(self.kulma)
+            self.suunta = QPointF(lx,ly)
+            
+            self.sijainti = sijainti   
+            
+            
         self.scene.jatkoPiste  = self.scene.jatkoPiste + self.suunta
 
         self.path = QPainterPath()

@@ -14,6 +14,7 @@ class Kartta(QGraphicsScene):
         self.jatkoKulma = 0.0
         
         self.valittu = None
+        self.valittuVanha = None
        
     def addGenericItem(self, item):    
         self.addItem(item)
@@ -34,7 +35,7 @@ class Kartta(QGraphicsScene):
             reader = csv.reader(f)
             try:
                 for row in reader:
-                    self.addGenericItem(Ratapala(float(row[0]), float(row[1]), self, float(row[2]), float(row[3])))
+                    self.addGenericItem(Ratapala(float(row[0]), float(row[1]), self, QPointF(float(row[2]), float(row[3]))))
             except csv.Error as e:
                 sys.exit('file {}, line {}: {}'.format(fileName, reader.line_num, e))
                 

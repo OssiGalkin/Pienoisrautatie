@@ -153,10 +153,34 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QPushButton" name="BtnValitseYhdistettavaksi">
+            <property name="text">
+             <string>Valitse yhdistettäväksi</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QPushButton" name="BtnPoista">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>Poista</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="BtnKaanna">
+            <property name="text">
+             <string>Käännä</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <widget class="QPushButton" name="BtnYhdista">
             <property name="cursor">
@@ -173,23 +197,6 @@
             </property>
             <property name="text">
              <string>Yhdistä</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="BtnPoista">
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="text">
-             <string>Poista</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="BtnKaanna">
-            <property name="text">
-             <string>Käännä</string>
             </property>
            </widget>
           </item>

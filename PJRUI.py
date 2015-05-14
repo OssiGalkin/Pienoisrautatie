@@ -16,6 +16,8 @@ class MyWindowClass(QMainWindow, form_class):
         self.palaPituus = 0
         self.palaKulma = 0.0
         
+        
+        
         self.scene =  Kartta()
         self.graphicsView.setScene(self.scene)
   
@@ -65,8 +67,13 @@ class MyWindowClass(QMainWindow, form_class):
         self.BtnPoista.clicked.connect(self.poistaPainettu)
         self.BtnPoista.setToolTip("Poistaa valitun palan") 
         
-        self.BtnYhdista.clicked.connect(self.buttonClicked)
-        self.BtnYhdista.setToolTip("Yhdistää valitun palan seuraavaksi valituun palaan") 
+        
+        
+        self.BtnValitseYhdistettavaksi.clicked.connect(self.valitseYhdistettavaksi)
+        self.BtnYhdista.setToolTip("Yhdistää valitun palan myöhemmin valittavaan palaan") 
+        
+        self.BtnYhdista.clicked.connect(self.yhdistaValitut)
+        self.BtnYhdista.setToolTip("Yhdistää valitun palan aiemmin valituun palaan") 
         
         self.BtnSuora.clicked.connect(self.suoraPainettu)
         self.BtnSuora.setToolTip("Luo kartalle uuden suoran ratapalan") 
@@ -96,6 +103,13 @@ class MyWindowClass(QMainWindow, form_class):
     
     def poistaPainettu(self):
         self.scene.removeItem(self.scene.valittu)
+    
+    def valitseYhdistettavaksi(self):
+        self.scene.valittuVanha = self.scene.valittu
+        self.statusBar().showMessage('Valitse vielä pala johon halua yhdistää')
+    
+    def yhdistaValitut(self):
+        self.scene.addGenericItem(Ratapala(None, None, self.scene,self.scene.valittuVanha.sijainti + self.scene.valittuVanha.sijainti.suunta, self.scene.valittu.sijainti))
     
     def center(self):
         
