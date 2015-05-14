@@ -6,34 +6,40 @@ from PyQt5.QtCore import QPointF
 from PyQt5.QtCore import Qt, QMimeData
 
 class Ratapala(QGraphicsPathItem):
-    def __init__(self, palaPituus, kulma, kayttoliittyma, scene):
-
-        self.scene = kayttoliittyma    
+    def __init__(self, palaPituus, kulma, scene, sijainti=None):
+  
         self.scene = scene
-        sijainti = self.scene.jatkoPiste 
+        self.kulma = kulma
+        self.pituus = palaPituus
         
-        lx = palaPituus * 5 * math.cos(kulma)
-        ly = palaPituus * 5 * math.sin(kulma)
+        if sijainti == None:
+            self.sijainti = self.scene.jatkoPiste 
+        else:
+            self.sijainti = sijainti
+        
+        lx = self.pituus * math.cos(self.kulma)
+        ly = self.pituus * math.sin(self.kulma)
 
-        suunta = QPointF(lx,ly)
+        self.suunta = QPointF(lx,ly)
 
-        self.scene.jatkoPiste  = self.scene.jatkoPiste + suunta
+        self.scene.jatkoPiste  = self.scene.jatkoPiste + self.suunta
 
         self.path = QPainterPath()
-        self.path.lineTo(suunta) 
+        self.path.lineTo(self.suunta) 
         QGraphicsPathItem.__init__(self, self.path)
-        self.setPos(sijainti)
+        self.setPos(self.sijainti)
 
         self.setFlag( QGraphicsItem.ItemIsMovable, True)
         self.setFlag( QGraphicsItem.ItemIsSelectable, True)
         self.setAcceptDrops(True)
 
-        self.sijainti = sijainti
-        self.suunta = suunta
-        self.kulma = kulma  
-
         self.lahdot = []
         self.seuraava = None
+        
+        print(self.muutaTekstiksi())
+        
+    def muutaTekstiksi(self):
+        return [str(self.pituus), str(self.kulma), str(self.sijainti)]
 
     def mouseReleaseEvent(self, event):
         self.scene.jatkoPiste = self.suunta + self.sijainti
@@ -67,4 +73,4 @@ class Ratapala(QGraphicsPathItem):
         return self.scene.self.itemAt(self.sijainti)
         
     def loppuNaapurit(self, sijainti):
-        return self.scene.self.itemAt(self.sijainti + self.suunta)
+        return self.scene.self.itemAt(self.sijainti + self.self.suunta)

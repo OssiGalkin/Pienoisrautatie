@@ -53,7 +53,7 @@
                <number>1</number>
               </property>
               <property name="maximum">
-               <number>30</number>
+               <number>200</number>
               </property>
               <property name="sliderPosition">
                <number>1</number>

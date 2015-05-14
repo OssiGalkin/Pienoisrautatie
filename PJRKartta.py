@@ -26,7 +26,6 @@ class Kartta(QGraphicsScene):
             except csv.Error as e:
                 sys.exit('file {}, line {}: {}'.format(fileName, reader.line_num, e))
 
-                
     def lataa (self, fileName):
 
         with open(fileName, newline='') as f:

@@ -2,7 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5 import uic
 from PJRKartta import Kartta
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QPointF
+from PyQt5.QtCore import Qt
 from PJRRatapala import Ratapala
 import math
 
@@ -15,10 +15,6 @@ class MyWindowClass(QMainWindow, form_class):
         
         self.palaPituus = 0
         self.palaKulma = 0.0
-        
-        self.jatkoKulma = 0.0
-        
-        self.valittu = None
         
         self.scene =  Kartta()
         self.graphicsView.setScene(self.scene)
@@ -86,17 +82,17 @@ class MyWindowClass(QMainWindow, form_class):
 
     def suoraPainettu(self):
 
-        self.scene.addGenericItem(Ratapala(self.palaPituus, self.jatkoKulma, self, self.scene))
+        self.scene.addGenericItem(Ratapala(self.palaPituus, self.scene.jatkoKulma, self.scene))
         
     def mutkaOikeaPainettu(self):
     
-        self.jatkoKulma = self.jatkoKulma + self.palaKulma
-        self.scene.addGenericItem(Ratapala(self.palaPituus, self.jatkoKulma, self, self.scene))
+        self.scene.jatkoKulma = self.scene.jatkoKulma + self.palaKulma
+        self.scene.addGenericItem(Ratapala(self.palaPituus, self.scene.jatkoKulma, self.scene))
     
     def mutkaVasenPainettu(self):
     
-        self.jatkoKulma = self.jatkoKulma - self.palaKulma
-        self.scene.addGenericItem(Ratapala(self.palaPituus, self.jatkoKulma, self, self.scene))
+        self.scene.jatkoKulma = self.scene.jatkoKulma - self.palaKulma
+        self.scene.addGenericItem(Ratapala(self.palaPituus, self.scene.jatkoKulma, self.scene))
     
     def poistaPainettu(self):
         self.scene.removeItem(self.scene.valittu)
@@ -132,19 +128,14 @@ class MyWindowClass(QMainWindow, form_class):
     def showOpenDialog(self):
 
         fname, _ = QFileDialog.getOpenFileName(self, 'Avaa', '/path/to/default/directory')
-        # TODO Tiedostotyyppi
         
         self.scene.lataa(fname)
 
             
     def showSaveDialog(self):
 
-        fileName, _ = QFileDialog.getSaveFileName(self, 'Tallenna', '/path/to/default/directory')
-        # TODO Tiedostotyyppi
-        # TODO
-        
+        fileName, _ = QFileDialog.getSaveFileName(self, 'Tallenna', '/path/to/default/directory')      
         self.scene.tallenna(fileName)
-        #self.statusBar().showMessage(str(fileName))
         
     def showNewDialog(self, event):
         
