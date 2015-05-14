@@ -82,7 +82,7 @@
                <number>0</number>
               </property>
               <property name="maximum">
-               <number>180</number>
+               <number>90</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -183,6 +183,13 @@
             </property>
             <property name="text">
              <string>Poista</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="BtnKaanna">
+            <property name="text">
+             <string>Käännä</string>
             </property>
            </widget>
           </item>

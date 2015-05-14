@@ -8,7 +8,6 @@ import math
 
 form_class = uic.loadUiType("Junarata.ui")[0]      
 
-
 class MyWindowClass(QMainWindow, form_class):
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
@@ -17,15 +16,25 @@ class MyWindowClass(QMainWindow, form_class):
         self.palaPituus = 0
         self.palaKulma = 0.0
         
-        self.jatkoPiste = QPointF(0,0)
         self.jatkoKulma = 0.0
         
         self.valittu = None
+        
+        self.scene =  Kartta()
+        self.graphicsView.setScene(self.scene)
+  
+        self.statusBar()
+        self.center()
 
         self.SliderPituus.valueChanged.connect(self.setPalaPituus)
         self.SliderPituus.valueChanged.connect(self.lcdNumber.display)
+        self.SliderPituus.setToolTip("Asettaa lisättävän ratapalan pituuden")
+        self.lcdNumber.setToolTip("Näyttää lisättävän ratapalan pituuden")
+        
         self.SliderKulma.valueChanged.connect(self.setPalaKulma)
         self.SliderKulma.valueChanged.connect(self.lcdNumber_2.display)
+        self.SliderKulma.setToolTip("Asettaa lisättävän mutkan kulman")
+        self.lcdNumber_2.setToolTip("Näyttää lisättävän mutkan kulman")
         
         exitAction = QAction(QIcon('exit24.png'), 'Lopeta', self)
         exitAction.setShortcut('Ctrl+Q')
@@ -42,51 +51,55 @@ class MyWindowClass(QMainWindow, form_class):
         newFile.setStatusTip('Luo uusi tyhjä rata')
         newFile.triggered.connect(self.showNewDialog)
         
-        saveFile = QAction(QIcon('save.png'), 'Save', self)
+        saveFile = QAction(QIcon('save.png'), 'Tallenna', self)
         saveFile.setShortcut('Ctrl+S')
         saveFile.setStatusTip('Tallenna rata')
         saveFile.triggered.connect(self.showSaveDialog)
 
         menubar = self.menuBar()
-        fileMenu = menubar.addMenu('&File')
+        fileMenu = menubar.addMenu('&Tiedosto')
         fileMenu.addAction(exitAction)
         fileMenu.addAction(openFile)
         fileMenu.addAction(newFile) 
         fileMenu.addAction(saveFile)         
 
-        self.scene =  Kartta()
-        self.graphicsView.setScene(self.scene)
-  
-        self.BtnPuu.clicked.connect(self.buttonClicked)            
-        self.BtnPoista.clicked.connect(self.poistaPainettu)        
-        self.BtnYhdista.clicked.connect(self.buttonClicked)
+        self.BtnPuu.clicked.connect(self.buttonClicked)
+        self.BtnPuu.setToolTip("Lisää puun kartalle")
         
+        self.BtnPoista.clicked.connect(self.poistaPainettu)
+        self.BtnPoista.setToolTip("Poistaa valitun palan") 
+        
+        self.BtnYhdista.clicked.connect(self.buttonClicked)
+        self.BtnYhdista.setToolTip("Yhdistää valitun palan seuraavaksi valituun palaan") 
         
         self.BtnSuora.clicked.connect(self.suoraPainettu)
+        self.BtnSuora.setToolTip("Luo kartalle uuden suoran ratapalan") 
+        
         self.BtnMutkaVasen.clicked.connect(self.mutkaVasenPainettu)
+        self.BtnMutkaVasen.setToolTip("Luo kartalle uuden vasemmalle kääntyvän ratapalan") 
+        
         self.BtnMutkaOikea.clicked.connect(self.mutkaOikeaPainettu)
+        self.BtnMutkaOikea.setToolTip("Luo kartalle uuden oikealle kääntyvän ratapalan") 
         
-        self.statusBar()
-        self.center()
+        self.BtnKaanna.clicked.connect(self.buttonClicked)
+        self.BtnKaanna.setToolTip("Kääntää valitun palan") 
 
-        
     def suoraPainettu(self):
 
-        self.scene.addGenericItem(Ratapala(self.palaPituus, self.jatkoKulma, self))
+        self.scene.addGenericItem(Ratapala(self.palaPituus, self.jatkoKulma, self, self.scene))
         
     def mutkaOikeaPainettu(self):
     
         self.jatkoKulma = self.jatkoKulma + self.palaKulma
-        self.scene.addGenericItem(Ratapala(self.palaPituus, self.jatkoKulma, self))
+        self.scene.addGenericItem(Ratapala(self.palaPituus, self.jatkoKulma, self, self.scene))
     
     def mutkaVasenPainettu(self):
     
-        #print(self.jatkoPiste.x(), self.jatkoPiste.y())
         self.jatkoKulma = self.jatkoKulma - self.palaKulma
-        self.scene.addGenericItem(Ratapala(self.palaPituus, self.jatkoKulma, self))
+        self.scene.addGenericItem(Ratapala(self.palaPituus, self.jatkoKulma, self, self.scene))
     
     def poistaPainettu(self):
-        self.scene.removeItem(self.valittu)
+        self.scene.removeItem(self.scene.valittu)
     
     def center(self):
         
@@ -118,21 +131,20 @@ class MyWindowClass(QMainWindow, form_class):
             
     def showOpenDialog(self):
 
-        fname, _ = QFileDialog.getOpenFileName(self, 'Avaa', '/home')
+        fname, _ = QFileDialog.getOpenFileName(self, 'Avaa', '/path/to/default/directory')
         # TODO Tiedostotyyppi
         
-        if fname:
-            f = open(fname, 'r')
-            with f:        
-                data = f.read()
-                self.statusBar().showMessage(data)
+        self.scene.lataa(fname)
+
             
     def showSaveDialog(self):
 
-        fileName = QFileDialog.getSaveFileName(self, 'Dialog Title', '/path/to/default/directory')
+        fileName, _ = QFileDialog.getSaveFileName(self, 'Tallenna', '/path/to/default/directory')
         # TODO Tiedostotyyppi
         # TODO
-        self.statusBar().showMessage(str(fileName))
+        
+        self.scene.tallenna(fileName)
+        #self.statusBar().showMessage(str(fileName))
         
     def showNewDialog(self, event):
         
@@ -143,11 +155,10 @@ class MyWindowClass(QMainWindow, form_class):
         if reply == QMessageBox.Yes:
             self.scene =  Kartta()
             self.graphicsView.setScene(self.scene)
-            #self.statusBar().showMessage('Nyt tulisi tyhjä kartta')
-            # TODO
             
     def setPalaPituus(self, arvo):
         self.palaPituus = arvo
         
     def setPalaKulma(self, arvo):
         self.palaKulma = math.radians(arvo)
+        
