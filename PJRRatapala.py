@@ -6,16 +6,16 @@ from PyQt5.QtCore import QPointF
 from PyQt5.QtCore import Qt, QMimeData
 
 class Ratapala(QGraphicsPathItem):
-    def __init__(self, palaPituus, kulma, scene, sijainti=None):
+    def __init__(self, palaPituus, kulma, scene, sijaintiX=None, sijaintiY=None):
   
         self.scene = scene
         self.kulma = kulma
         self.pituus = palaPituus
         
-        if sijainti == None:
+        if sijaintiX == None or sijaintiY == None:
             self.sijainti = self.scene.jatkoPiste 
         else:
-            self.sijainti = sijainti
+            self.sijainti = QPointF(sijaintiX,sijaintiY)
         
         lx = self.pituus * math.cos(self.kulma)
         ly = self.pituus * math.sin(self.kulma)
@@ -32,14 +32,9 @@ class Ratapala(QGraphicsPathItem):
         self.setFlag( QGraphicsItem.ItemIsMovable, True)
         self.setFlag( QGraphicsItem.ItemIsSelectable, True)
         self.setAcceptDrops(True)
-
-        self.lahdot = []
-        self.seuraava = None
-        
-        print(self.muutaTekstiksi())
         
     def muutaTekstiksi(self):
-        return [str(self.pituus), str(self.kulma), str(self.sijainti)]
+        return [str(self.pituus), str(self.kulma), str(self.sijainti.x()), str(self.sijainti.y())]
 
     def mouseReleaseEvent(self, event):
         self.scene.jatkoPiste = self.suunta + self.sijainti

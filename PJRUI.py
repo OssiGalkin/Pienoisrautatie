@@ -127,15 +127,19 @@ class MyWindowClass(QMainWindow, form_class):
             
     def showOpenDialog(self):
 
-        fname, _ = QFileDialog.getOpenFileName(self, 'Avaa', '/path/to/default/directory')
+        fileName, _ = QFileDialog.getOpenFileName(self, 'Avaa', '/path/to/default/directory')
         
-        self.scene.lataa(fname)
-
+        if fileName != '':
+            self.scene =  Kartta()
+            self.graphicsView.setScene(self.scene)
+            self.scene.lataa(fileName)
             
     def showSaveDialog(self):
 
-        fileName, _ = QFileDialog.getSaveFileName(self, 'Tallenna', '/path/to/default/directory')      
-        self.scene.tallenna(fileName)
+        fileName, _ = QFileDialog.getSaveFileName(self, 'Tallenna', '/path/to/default/directory')   
+        
+        if fileName != '':
+            self.scene.tallenna(fileName)
         
     def showNewDialog(self, event):
         

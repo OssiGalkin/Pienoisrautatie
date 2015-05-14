@@ -4,6 +4,8 @@ from PyQt5.QtWidgets import QGraphicsScene
 from PyQt5.QtGui import *
 from PyQt5.QtCore import QPointF
 
+from PJRRatapala import Ratapala
+
 class Kartta(QGraphicsScene):
     def __init__(self):
         QGraphicsScene.__init__(self)  
@@ -18,11 +20,11 @@ class Kartta(QGraphicsScene):
 
     def tallenna(self, fileName):
     
-        fileName = 'some.csv'
         with open(fileName, 'w', newline='') as csvfile:
             spamwriter = csv.writer(csvfile)
             try:
-                spamwriter.writerow(['Spam', 'Lovely Spam', 'Wonderful Spam'])
+                for i in self.items():
+                    spamwriter.writerow(i.muutaTekstiksi())
             except csv.Error as e:
                 sys.exit('file {}, line {}: {}'.format(fileName, reader.line_num, e))
 
@@ -32,7 +34,7 @@ class Kartta(QGraphicsScene):
             reader = csv.reader(f)
             try:
                 for row in reader:
-                    print(row)
+                    self.addGenericItem(Ratapala(float(row[0]), float(row[1]), self, float(row[2]), float(row[3])))
             except csv.Error as e:
                 sys.exit('file {}, line {}: {}'.format(fileName, reader.line_num, e))
                 
