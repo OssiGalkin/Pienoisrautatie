@@ -113,6 +113,6 @@ class Ratapala(QGraphicsPathItem):
         '''
         Vaihtaa alku ja loppupisteen paikat keskenään
         '''
-        self.scene.addGenericItem(Ratapala(None, None, self.scene, self.sijainti + self.suunta, -self.suunta))
+        self.scene.addRatapala(None, None, self.sijainti + self.suunta, -self.suunta)
         self.scene.removeItem(self)
     
