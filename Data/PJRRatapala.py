@@ -14,27 +14,20 @@ class Ratapala(QGraphicsPathItem):
         
         if sijainti == None:
             self.sijainti = self.scene.jatkoPiste 
-
-            if suunta != None:
-                self.suunta = suunta
-                
-                self.kulma = math.atan2(sijainti.y()-suunta.y(), sijainti.x()-suunta.x())
-                self.pituus = math.sqrt((sijainti.x()-suunta.x())**2 + (sijainti.y()-suunta.y())**2) 
-
-            else:    
             
-                lx = self.pituus * math.cos(self.kulma)
-                ly = self.pituus * math.sin(self.kulma)
-                self.suunta = QPointF(lx,ly)
-                    
         else:
+            self.sijainti = sijainti
+            
+        if suunta == None and sijainti == None:
         
-            lx = self.pituus * math.cos(self.kulma)
-            ly = self.pituus * math.sin(self.kulma)
+            lx = self.pituus * math.cos(kulma)
+            ly = self.pituus * math.sin(kulma)
             self.suunta = QPointF(lx,ly)
-            
-            self.sijainti = sijainti   
-            
+                
+        else:             
+            self.kulma = math.atan2(sijainti.y()-suunta.y(), sijainti.x()-suunta.x())
+            self.pituus = math.sqrt((sijainti.x()-suunta.x())**2 + (sijainti.y()-suunta.y())**2) 
+            self.suunta = suunta
             
         self.scene.jatkoPiste  = self.scene.jatkoPiste + self.suunta
 
@@ -48,7 +41,7 @@ class Ratapala(QGraphicsPathItem):
         self.setAcceptDrops(True)
         
     def muutaTekstiksi(self):
-        return [str(self.pituus), str(self.kulma), str(self.sijainti.x()), str(self.sijainti.y())]
+        return [str(self.pituus), str(self.kulma), str(self.sijainti.x()), str(self.sijainti.y()), str(self.suunta.x()), str(self.suunta.y())]
 
     def mouseReleaseEvent(self, event):
         self.scene.jatkoPiste = self.suunta + self.sijainti
@@ -83,3 +76,8 @@ class Ratapala(QGraphicsPathItem):
         
     def loppuNaapurit(self, sijainti):
         return self.scene.self.itemAt(self.sijainti + self.self.suunta)
+        
+    def kaanna(self):
+        self.scene.addGenericItem(Ratapala(None, None, self.scene, self.sijainti + self.suunta, -self.suunta))
+        self.scene.removeItem(self)
+    

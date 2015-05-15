@@ -1,10 +1,11 @@
+import math
+
 from PyQt5.QtGui import *
 from PyQt5 import uic
-from PJRKartta import Kartta
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import Qt
-from PJRRatapala import Ratapala
-import math
+from PyQt5.QtCore import Qt, QPointF
+
+from Data.PJRKartta import Kartta
 
 form_class = uic.loadUiType("Junarata.ui")[0]      
 
@@ -15,15 +16,13 @@ class MyWindowClass(QMainWindow, form_class):
         
         self.palaPituus = 0
         self.palaKulma = 0.0
-        
-        
-        
+
         self.scene =  Kartta()
         self.graphicsView.setScene(self.scene)
   
         self.statusBar()
         self.center()
-
+ 
         self.SliderPituus.valueChanged.connect(self.setPalaPituus)
         self.SliderPituus.valueChanged.connect(self.lcdNumber.display)
         self.SliderPituus.setToolTip("Asettaa lisättävän ratapalan pituuden")
@@ -67,8 +66,6 @@ class MyWindowClass(QMainWindow, form_class):
         self.BtnPoista.clicked.connect(self.poistaPainettu)
         self.BtnPoista.setToolTip("Poistaa valitun palan") 
         
-        
-        
         self.BtnValitseYhdistettavaksi.clicked.connect(self.valitseYhdistettavaksi)
         self.BtnYhdista.setToolTip("Yhdistää valitun palan myöhemmin valittavaan palaan") 
         
@@ -84,33 +81,39 @@ class MyWindowClass(QMainWindow, form_class):
         self.BtnMutkaOikea.clicked.connect(self.mutkaOikeaPainettu)
         self.BtnMutkaOikea.setToolTip("Luo kartalle uuden oikealle kääntyvän ratapalan") 
         
-        self.BtnKaanna.clicked.connect(self.buttonClicked)
-        self.BtnKaanna.setToolTip("Kääntää valitun palan") 
+        self.BtnKaanna.clicked.connect(self.kaannaPainettu)
+        self.BtnSuora.setToolTip("Kääntää valitun ratapalan") 
 
     def suoraPainettu(self):
 
-        self.scene.addGenericItem(Ratapala(self.palaPituus, self.scene.jatkoKulma, self.scene))
+        self.scene.addRatapala(self.palaPituus, self.scene.jatkoKulma, self.scene)
         
     def mutkaOikeaPainettu(self):
     
         self.scene.jatkoKulma = self.scene.jatkoKulma + self.palaKulma
-        self.scene.addGenericItem(Ratapala(self.palaPituus, self.scene.jatkoKulma, self.scene))
+        self.scene.addRatapala(self.palaPituus, self.scene.jatkoKulma, self.scene)
     
     def mutkaVasenPainettu(self):
     
         self.scene.jatkoKulma = self.scene.jatkoKulma - self.palaKulma
-        self.scene.addGenericItem(Ratapala(self.palaPituus, self.scene.jatkoKulma, self.scene))
+        self.scene.addRatapala(self.palaPituus, self.scene.jatkoKulma, self.scene)
     
     def poistaPainettu(self):
+    
         self.scene.removeItem(self.scene.valittu)
     
     def valitseYhdistettavaksi(self):
+    
         self.scene.valittuVanha = self.scene.valittu
         self.statusBar().showMessage('Valitse vielä pala johon halua yhdistää')
     
     def yhdistaValitut(self):
-        self.scene.addGenericItem(Ratapala(None, None, self.scene,self.scene.valittuVanha.sijainti + self.scene.valittuVanha.sijainti.suunta, self.scene.valittu.sijainti))
     
+        if self.scene.valittu != None and self.scene.valittuVanha != None:
+            sijainti = self.scene.valittuVanha.sijainti + self.scene.valittuVanha.suunta
+            suunta = self.scene.valittu.sijainti + self.scene.valittu.suunta
+            self.scene.addRatapala(None, None, self.scene, sijainti, suunta-sijainti)
+        
     def center(self):
         
         qr = self.frameGeometry()
@@ -166,8 +169,16 @@ class MyWindowClass(QMainWindow, form_class):
             self.graphicsView.setScene(self.scene)
             
     def setPalaPituus(self, arvo):
+    
         self.palaPituus = arvo
         
     def setPalaKulma(self, arvo):
+    
         self.palaKulma = math.radians(arvo)
+        
+    def kaannaPainettu(self):
+    
+        if self.scene.valittu != None:
+            self.scene.valittu.kaanna()
+
         

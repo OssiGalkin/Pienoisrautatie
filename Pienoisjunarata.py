@@ -7,14 +7,14 @@
 ## CSE-A1121 Ohjelmoinnin peruskurssi Y2 (5 op) Projektityö
 ## Aihepiiri: grafiikka, työ 110: Pienoisrautatie
 ##
+## Käyttö: aja tämä tiedosto
+## Vaatimukset: Python 3.4 tulkki ja PyQt 5, testattu: Windows 7
+##
 #############################################################################
 
 import sys
-
 from PyQt5.QtWidgets import QApplication
-
-from PJRUI import MyWindowClass
-from PJRKartta import Kartta
+from Data.PJRUI import MyWindowClass
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
