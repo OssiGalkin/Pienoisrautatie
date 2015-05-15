@@ -16,8 +16,8 @@ class Kartta(QGraphicsScene):
         self.valittu = None
         self.valittuVanha = None
        
-    def addRatapala(self, palaPituus, kulma, scene, sijainti = None, suunta = None):    
-        self.addItem(Ratapala(palaPituus, kulma, scene, sijainti, suunta))
+    def addRatapala(self, palaPituus, kulma, sijainti = None, suunta = None):    
+        self.addItem(Ratapala(palaPituus, kulma, self, sijainti, suunta))
 
     def tallenna(self, fileName):
     
@@ -35,7 +35,7 @@ class Kartta(QGraphicsScene):
             reader = csv.reader(f)
             try:
                 for row in reader:
-                    self.addGenericItem(Ratapala(float(row[0]), float(row[1]), self, QPointF(float(row[2]), float(row[3])), QPointF(float(row[4]), float(row[5]))))
+                    self.addRatapala(None, None, QPointF(float(row[0]), float(row[1])), QPointF(float(row[2]), float(row[3])))
             except csv.Error as e:
                 sys.exit('file {}, line {}: {}'.format(fileName, reader.line_num, e))
                 

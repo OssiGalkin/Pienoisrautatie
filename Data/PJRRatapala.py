@@ -6,11 +6,14 @@ from PyQt5.QtCore import QPointF
 from PyQt5.QtCore import Qt, QMimeData
 
 class Ratapala(QGraphicsPathItem):
-    def __init__(self, palaPituus, kulma, scene, sijainti = None, suunta = None):
-  
+    def __init__(self, pituus, kulma, scene, sijainti = None, suunta = None):
+        '''
+        Luo uuden ratapalan, joko sen pituuden ja kulman avulla, jolloin pala lisätään edellisen perään, tai käyttäen koordinaatteja sijainti ja suunta.
+        Tämän konstruktorin toiminta on hieman omalaatuinen, se on selitetty seikkaperäisesti työn dokumentissa.
+        '''
         self.scene = scene
         self.kulma = kulma
-        self.pituus = palaPituus
+        self.pituus = pituus
         
         if sijainti == None:
             self.sijainti = self.scene.jatkoPiste 
@@ -41,18 +44,29 @@ class Ratapala(QGraphicsPathItem):
         self.setAcceptDrops(True)
         
     def muutaTekstiksi(self):
-        return [str(self.pituus), str(self.kulma), str(self.sijainti.x()), str(self.sijainti.y()), str(self.suunta.x()), str(self.suunta.y())]
-
+        ''' 
+        Luo tekstimuotoisen esityksen ratapalasta
+        '''
+        return [str(self.sijainti.x()), str(self.sijainti.y()), str(self.suunta.x()), str(self.suunta.y())]
+        
     def mouseReleaseEvent(self, event):
+        '''
+        "Valitsee" Ratapalan kun sitä klikataan hiirellä
+        '''
         self.scene.jatkoPiste = self.suunta + self.sijainti
         self.scene.jatkoKulma = self.kulma
         self.scene.valittu = self
         
     def dragEnterEvent(self, e):
+        '''
+        Sallii ratapalan draggaamisen. Metodi on Qt:ta varten.
+        '''
         e.accept()
 
     def mouseMoveEvent(self, e):
-        
+        '''
+        Luo ratapalsata Mime tiedot, kun sitä liikuttaa
+        '''
         mimeData = QMimeData()
         drag = QDrag(e.widget())
         drag.setMimeData(mimeData)
@@ -60,7 +74,10 @@ class Ratapala(QGraphicsPathItem):
         dropAction = drag.exec_(Qt.MoveAction)
         
     def dropEvent(self, e):
-
+        '''
+        Liittää palan päälle tiputettavan ratapalan palan perään
+        '''
+    
         uusiSijainti = self.suunta + self.sijainti
         
         self.scene.valittu.setPos(uusiSijainti)
@@ -71,13 +88,16 @@ class Ratapala(QGraphicsPathItem):
         e.setDropAction(Qt.MoveAction)
         e.accept()
 
-    def alkuNaapurit(self, sijainti):
-        return self.scene.self.itemAt(self.sijainti)
-        
-    def loppuNaapurit(self, sijainti):
-        return self.scene.self.itemAt(self.sijainti + self.self.suunta)
+    def annaNaapurit(self):
+        '''
+        Palauttaa naapuripalat listana 
+        '''
+        return self.scene.collidingItems(self)
         
     def kaanna(self):
+        '''
+        Vaihtaa alku ja loppupisteen paikat keskenään
+        '''
         self.scene.addGenericItem(Ratapala(None, None, self.scene, self.sijainti + self.suunta, -self.suunta))
         self.scene.removeItem(self)
     

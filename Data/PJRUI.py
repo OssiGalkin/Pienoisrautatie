@@ -9,8 +9,11 @@ from Data.PJRKartta import Kartta
 
 form_class = uic.loadUiType("Junarata.ui")[0]      
 
-class MyWindowClass(QMainWindow, form_class):
+class Ikkuna(QMainWindow, form_class):
     def __init__(self, parent=None):
+        '''
+        Luo ohjelman ikkunan, sekä lisää kaikkiin nappuloihin ja muihin tarvittavan toiminnalisuuden.
+        '''
         QMainWindow.__init__(self, parent)
         self.setupUi(self)
         
@@ -27,11 +30,13 @@ class MyWindowClass(QMainWindow, form_class):
         self.SliderPituus.valueChanged.connect(self.lcdNumber.display)
         self.SliderPituus.setToolTip("Asettaa lisättävän ratapalan pituuden")
         self.lcdNumber.setToolTip("Näyttää lisättävän ratapalan pituuden")
+        self.SliderPituus.setValue(7)
         
         self.SliderKulma.valueChanged.connect(self.setPalaKulma)
         self.SliderKulma.valueChanged.connect(self.lcdNumber_2.display)
         self.SliderKulma.setToolTip("Asettaa lisättävän mutkan kulman")
         self.lcdNumber_2.setToolTip("Näyttää lisättävän mutkan kulman")
+        self.SliderKulma.setValue(12)
         
         exitAction = QAction(QIcon('exit24.png'), 'Lopeta', self)
         exitAction.setShortcut('Ctrl+Q')
@@ -86,17 +91,17 @@ class MyWindowClass(QMainWindow, form_class):
 
     def suoraPainettu(self):
 
-        self.scene.addRatapala(self.palaPituus, self.scene.jatkoKulma, self.scene)
+        self.scene.addRatapala(self.palaPituus, self.scene.jatkoKulma)
         
     def mutkaOikeaPainettu(self):
     
         self.scene.jatkoKulma = self.scene.jatkoKulma + self.palaKulma
-        self.scene.addRatapala(self.palaPituus, self.scene.jatkoKulma, self.scene)
+        self.scene.addRatapala(self.palaPituus, self.scene.jatkoKulma)
     
     def mutkaVasenPainettu(self):
     
         self.scene.jatkoKulma = self.scene.jatkoKulma - self.palaKulma
-        self.scene.addRatapala(self.palaPituus, self.scene.jatkoKulma, self.scene)
+        self.scene.addRatapala(self.palaPituus, self.scene.jatkoKulma)
     
     def poistaPainettu(self):
     
@@ -112,7 +117,7 @@ class MyWindowClass(QMainWindow, form_class):
         if self.scene.valittu != None and self.scene.valittuVanha != None:
             sijainti = self.scene.valittuVanha.sijainti + self.scene.valittuVanha.suunta
             suunta = self.scene.valittu.sijainti + self.scene.valittu.suunta
-            self.scene.addRatapala(None, None, self.scene, sijainti, suunta-sijainti)
+            self.scene.addRatapala(None, None, sijainti, suunta - sijainti)
         
     def center(self):
         
@@ -125,11 +130,6 @@ class MyWindowClass(QMainWindow, form_class):
       
         sender = self.sender()
         self.statusBar().showMessage('Nappia: ' + sender.text() + ' painettiin')
-        
-    def keyPressEvent(self, e):
-        
-        if e.key() == Qt.Key_Escape:
-            self.close()
 
     def closeEvent(self, event):
         

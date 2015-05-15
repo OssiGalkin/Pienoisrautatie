@@ -14,10 +14,10 @@
 
 import sys
 from PyQt5.QtWidgets import QApplication
-from Data.PJRUI import MyWindowClass
+from Data.PJRUI import Ikkuna
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    myWindow = MyWindowClass(None)
+    myWindow = Ikkuna(None)
     myWindow.show()
     app.exec_()
