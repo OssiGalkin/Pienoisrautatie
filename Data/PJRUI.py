@@ -64,15 +64,12 @@ class Ikkuna(QMainWindow, form_class):
         fileMenu.addAction(openFile)
         fileMenu.addAction(newFile) 
         fileMenu.addAction(saveFile)         
-
-        self.BtnPuu.clicked.connect(self.buttonClicked)
-        self.BtnPuu.setToolTip("Lisää puun kartalle")
         
         self.BtnPoista.clicked.connect(self.poistaPainettu)
         self.BtnPoista.setToolTip("Poistaa valitun palan") 
         
         self.BtnValitseYhdistettavaksi.clicked.connect(self.valitseYhdistettavaksi)
-        self.BtnYhdista.setToolTip("Yhdistää valitun palan myöhemmin valittavaan palaan") 
+        self.BtnValitseYhdistettavaksi.setToolTip("Yhdistää valitun palan myöhemmin valittavaan palaan") 
         
         self.BtnYhdista.clicked.connect(self.yhdistaValitut)
         self.BtnYhdista.setToolTip("Yhdistää valitun palan aiemmin valituun palaan") 
@@ -87,7 +84,7 @@ class Ikkuna(QMainWindow, form_class):
         self.BtnMutkaOikea.setToolTip("Luo kartalle uuden oikealle kääntyvän ratapalan") 
         
         self.BtnKaanna.clicked.connect(self.kaannaPainettu)
-        self.BtnSuora.setToolTip("Kääntää valitun ratapalan") 
+        self.BtnKaanna.setToolTip("Kääntää valitun ratapalan") 
 
     def suoraPainettu(self):
 
@@ -126,11 +123,6 @@ class Ikkuna(QMainWindow, form_class):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
         
-    def buttonClicked(self):
-      
-        sender = self.sender()
-        self.statusBar().showMessage('Nappia: ' + sender.text() + ' painettiin')
-
     def closeEvent(self, event):
         
         reply = QMessageBox.question(self, 'Viesti',

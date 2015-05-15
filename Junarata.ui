@@ -33,6 +33,9 @@
             <property name="accessibleDescription">
              <string/>
             </property>
+            <property name="renderHints">
+             <set>QPainter::Antialiasing|QPainter::TextAntialiasing</set>
+            </property>
            </widget>
           </item>
           <item>
@@ -144,19 +147,28 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="BtnPuu">
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
+           <widget class="QPushButton" name="BtnValitseYhdistettavaksi">
             <property name="text">
-             <string>Puu</string>
+             <string>Valitse yhdistettäväksi</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="BtnValitseYhdistettavaksi">
+           <widget class="QPushButton" name="BtnYhdista">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="statusTip">
+             <string/>
+            </property>
+            <property name="whatsThis">
+             <string comment="&quot;erfwf&quot;" extracomment="&quot;444&quot;"/>
+            </property>
             <property name="text">
-             <string>Valitse yhdistettäväksi</string>
+             <string>Yhdistä</string>
             </property>
            </widget>
           </item>
@@ -178,25 +190,6 @@
            <widget class="QPushButton" name="BtnKaanna">
             <property name="text">
              <string>Käännä</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="BtnYhdista">
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="toolTip">
-             <string/>
-            </property>
-            <property name="statusTip">
-             <string/>
-            </property>
-            <property name="whatsThis">
-             <string comment="&quot;erfwf&quot;" extracomment="&quot;444&quot;"/>
-            </property>
-            <property name="text">
-             <string>Yhdistä</string>
             </property>
            </widget>
           </item>

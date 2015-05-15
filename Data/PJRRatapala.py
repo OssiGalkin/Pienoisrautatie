@@ -1,9 +1,11 @@
 import math
 
 from PyQt5.QtWidgets import QGraphicsPathItem, QGraphicsItem
-from PyQt5.QtGui import QPainterPath, QDrag
+from PyQt5.QtGui import QPainterPath, QDrag, QPen
 from PyQt5.QtCore import QPointF
-from PyQt5.QtCore import Qt, QMimeData
+from PyQt5.QtCore import Qt, QMimeData, QRectF
+
+
 
 class Ratapala(QGraphicsPathItem):
     def __init__(self, pituus, kulma, scene, sijainti = None, suunta = None):
@@ -14,6 +16,8 @@ class Ratapala(QGraphicsPathItem):
         self.scene = scene
         self.kulma = kulma
         self.pituus = pituus
+        
+        self.pen = QPen(Qt.black, 2, Qt.SolidLine)
         
         if sijainti == None:
             self.sijainti = self.scene.jatkoPiste 
@@ -35,8 +39,19 @@ class Ratapala(QGraphicsPathItem):
         self.scene.jatkoPiste  = self.scene.jatkoPiste + self.suunta
 
         self.path = QPainterPath()
+        
+        
         self.path.lineTo(self.suunta) 
-        QGraphicsPathItem.__init__(self, self.path)
+        
+        '''
+        # Jostain syystä käyrät ei ole ystäviä :(
+        
+        nelio= 	QRectF()
+        nelio.setCoords(self.sijainti.x(), self.sijainti.y(), self.suunta.x(), self.suunta.y()-self.sijainti.y())
+        self.path.arcTo(nelio, self.kulma, -self.kulma+math.pi) 
+        '''
+        
+        QGraphicsPathItem.__init__(self, self.path )
         self.setPos(self.sijainti)
 
         self.setFlag( QGraphicsItem.ItemIsMovable, True)

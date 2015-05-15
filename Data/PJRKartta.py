@@ -5,7 +5,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import QPointF
 
 from Data.PJRRatapala import Ratapala
-
+from PyQt5.QtCore import Qt
 class Kartta(QGraphicsScene):
     def __init__(self):
         QGraphicsScene.__init__(self)  
@@ -17,10 +17,16 @@ class Kartta(QGraphicsScene):
         self.valittuVanha = None
        
     def addRatapala(self, palaPituus, kulma, sijainti = None, suunta = None):    
-        self.addItem(Ratapala(palaPituus, kulma, self, sijainti, suunta))
+        item = Ratapala(palaPituus, kulma, self, sijainti, suunta)
+        pen = QPen(Qt.black, 1.5, Qt.SolidLine)
+        
+        item.setPen(pen)
+        self.addItem(item)
 
     def tallenna(self, fileName):
-    
+        '''
+        Tallentaa kartan kaikki ratapalat csv tiedostoon
+        '''
         with open(fileName, 'w', newline='') as csvfile:
             spamwriter = csv.writer(csvfile)
             try:
@@ -30,7 +36,9 @@ class Kartta(QGraphicsScene):
                 sys.exit('file {}, line {}: {}'.format(fileName, reader.line_num, e))
 
     def lataa (self, fileName):
-
+        '''
+        Lataa ratapaloja csv tiedostosta kartalle. Kartalla voi olla jo ennestään ratapaloja.
+        '''
         with open(fileName, newline='') as f:
             reader = csv.reader(f)
             try:
